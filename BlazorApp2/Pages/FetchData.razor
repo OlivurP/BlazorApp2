@@ -1,0 +1,76 @@
+﻿@page "/fetchdata"
+@using BlazorApp2.Data
+@inject WeatherForecastService ForecastService
+@inject HttpClient Http
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Jákups API</h1>
+<ShowUrl @ref="showUrl"/>
+
+
+<p>This component demonstrates fetching data from a service.</p>
+
+<style>
+.button {
+  font: bold 11px Arial;
+  text-decoration: none;
+  color: #333333;
+  padding: 6px 6px 6px 6px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+  background-color: red;
+}
+</style>
+
+
+
+@if (people == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Active</th>
+                <th>Age</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Url</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in people)
+            {
+                <tr>
+                    <td>@p.Active</td>
+                    <td>@p.Age</td>
+                    <td>@p.Name</td>
+                    <td>@p.Description</td>
+                    <td>@p.Url</td>
+                    <td><button class="btn btn-primary" @onclick="() => UpdateUrl(p)">Vis Url</button></td>
+                    <td><a href="https://@p.Url" class="button" target="_blank">Gå til Url</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    ShowUrl showUrl;
+    private IEnumerable<Person> people;
+
+    protected override async Task OnInitializedAsync()
+    {
+        people = await Http.GetFromJsonAsync<IEnumerable<Person>>("https://restpublic.junoeuro.dk/service1.svc/getListOfPersons/");
+    }
+
+    public void UpdateUrl(Person p)
+    {
+        showUrl.UpdateUrl(p.Url);
+    }
+}

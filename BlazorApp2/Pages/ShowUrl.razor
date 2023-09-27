@@ -1,0 +1,13 @@
+﻿
+<p role="status">@Url</p>
+
+@code {
+    [Parameter]
+    public string? Url { get; set; } = "Intet link er valgt";
+
+    public void UpdateUrl(string s)
+    {
+        Url = s;
+        StateHasChanged();
+    }
+}
